@@ -17,12 +17,11 @@ describe('User route test', function() {
     request.post('/api/users')
     .send(user)
     .expect(200)
-    .end(function(err){
+    .end(function(err, res){
       expect(err).toBe(null);
       done();
     });
   });
-
   it('should not create a new user with duplicate credentials', function(done) {
     user = {
       username: 'olamidebaddo',
@@ -34,14 +33,13 @@ describe('User route test', function() {
     request.post('/api/users')
     .send(user)
     .expect(401)
-    .end(function(err, response) {
-      expect(response.body).toEqual(jasmine.objectContaining({
+    .end(function(err, res) {
+      expect(res.body).toEqual(jasmine.objectContaining({
           success: false,
           message: 'Username Already Exists!'}));
       done();
     });
   });
-
   it('should not create a new user with an undefined username', function(done) {
     user = {
       username: undefined,
@@ -53,15 +51,14 @@ describe('User route test', function() {
     request.post('/api/users')
     .send(user)
     .expect(401)
-    .end(function(err, response) {
-      expect(response.body).toEqual(jasmine.objectContaining({
+    .end(function(err, res) {
+      expect(res.body).toEqual(jasmine.objectContaining({
           success: false,
           message: 'Invalid Username or Email or Password!'
       }));
       done();
     });
   });
-
   it('should not create a new user with an undefined firstname', function(done) {
     user = {
       username: 'olamidebaddo',
@@ -73,15 +70,14 @@ describe('User route test', function() {
     request.post('/api/users')
     .send(user)
     .expect(401)
-    .end(function(err, response) {
-      expect(response.body).toEqual(jasmine.objectContaining({
+    .end(function(err, res) {
+      expect(res.body).toEqual(jasmine.objectContaining({
           success: false,
           message: 'Invalid Firstname or Lastname!'
       }));
       done();
     });
   });
-
   it('should not create a new user with an undefined email', function(done) {
     user = {
       username: 'olamidebaddo',
@@ -93,15 +89,14 @@ describe('User route test', function() {
     request.post('/api/users')
     .send(user)
     .expect(401)
-    .end(function(err, response) {
-      expect(response.body).toEqual(jasmine.objectContaining({
+    .end(function(err, res) {
+      expect(res.body).toEqual(jasmine.objectContaining({
           success: false,
           message: 'Invalid Username or Email or Password!'
       }));
       done();
     });
   });
-
   it('should not create a new user with an undefined password', function(done) {
     user = {
       username: 'olamidebaddo',
@@ -113,15 +108,14 @@ describe('User route test', function() {
     request.post('/api/users')
     .send(user)
     .expect(401)
-    .end(function(err, response) {
-      expect(response.body).toEqual(jasmine.objectContaining({
+    .end(function(err, res) {
+      expect(res.body).toEqual(jasmine.objectContaining({
           success: false,
           message: 'Invalid Username or Email or Password!'
       }));
       done();
     });
   });
-
   it('should login a user with correct credentials', function(done) {
     user = {
       username: 'olamidebaddo',
@@ -135,7 +129,6 @@ describe('User route test', function() {
       done();
     });
   });
-
   it('should not login a user with incorrect username', function(done) {
     user = {
       username: 'lilkesh',
@@ -144,15 +137,14 @@ describe('User route test', function() {
     request.post('/api/users/login')
     .send(user)
     .expect(401)
-    .end(function(err, response) {
-      expect(response.body).toEqual(jasmine.objectContaining({
+    .end(function(err, res) {
+      expect(res.body).toEqual(jasmine.objectContaining({
         success: false,
         message: 'Invalid Username or Password!'
       }));
       done();
     });
   });
-
   it('should not login a user with wrong password', function(done) {
     user = {
       username: 'olamidebaddo',
@@ -161,15 +153,14 @@ describe('User route test', function() {
     request.post('/api/users/login')
     .send(user)
     .expect(401)
-    .end(function(err, response) {
-      expect(response.body).toEqual(jasmine.objectContaining({
+    .end(function(err, res) {
+      expect(res.body).toEqual(jasmine.objectContaining({
         success: false,
         message: 'Invalid Username or Password!'
       }));
       done();
     });
   });
-
   it('should log a user out', function(done) {
     user = {
       username: 'olamidebaddo',
@@ -178,9 +169,9 @@ describe('User route test', function() {
     request.post('/api/users/logout')
     .send(user)
     .expect(200)
-    .end(function(err, response) {
+    .end(function(err, res) {
       expect(err).toBe(null);
-      expect(response.body).toEqual(jasmine.objectContaining({
+      expect(res.body).toEqual(jasmine.objectContaining({
           success: true,
           message: 'You have logged out.'
       }));
@@ -190,7 +181,6 @@ describe('User route test', function() {
 });
 
 describe('User route test', function() {
-
   beforeEach(function(done) {
     user = new User();
       User.remove({}, function() {
@@ -205,7 +195,6 @@ describe('User route test', function() {
     token = jwt.sign(user, config.secret, { expiresIn: 1440 });
     done();
   });
-
   it('should return all users', function(done) {
     request.get('/api/users')
     .set('x-access-token', token)
@@ -216,7 +205,6 @@ describe('User route test', function() {
       done();
     });
   });
-
   it('should return a single user', function(done) {
     request.get('/api/users/' + id)
     .set('x-access-token', token)
@@ -227,32 +215,28 @@ describe('User route test', function() {
       done();
     });
   });
-
   it('should not return a user without token', function(done) {
     request.get('/api/users/' + id)
     .expect(403)
-    .end(function(err, response) {
-      expect(response.body).toEqual(jasmine.objectContaining( {
+    .end(function(err, res) {
+      expect(res.body).toEqual(jasmine.objectContaining( {
         success: false,
-        message: 'No token provided.'
-      }));
+        message: 'No token provided.'}));
       done();
     });
   });
-
-  it('should edit a user details', function() {
-    user = {
-      username:'wizkid'
-    };
+  it('should edit a user details', function(done) {
     request.put('/api/users/' + id)
     .set('x-access-token', token)
     .expect(200)
-    .send(user)
+    .send({username:'wizkid'})
     .end(function(err, res){
-      expect(err).toBe(null);
+      expect(res.body).toEqual(jasmine.objectContaining( {
+        success: true,
+        message: 'User Updated!'}));
+      done();
     });
   });
-
   it('should delete a user', function(done) {
     request.delete('/api/users/' + id)
     .set('x-access-token', token)
@@ -260,8 +244,7 @@ describe('User route test', function() {
     .end(function(err, res){
       expect(res.body).toEqual(jasmine.objectContaining({
         success: true, 
-        message: 'User Deleted'
-      }));
+        message: 'User Deleted'}));
       done();
     });
   });
