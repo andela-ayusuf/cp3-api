@@ -68,7 +68,7 @@ exports.getDoc = function(req, res) {
 };
 
 exports.editDoc = function(req, res) {
-  Document.update({_id: req.params.id},req.body, function() {
+  Document.findByIdAndUpdate(req.params.id, req.body, function(err, doc) {
     res.send({
       success: true,
       message: 'Document Updated!'
@@ -77,8 +77,7 @@ exports.editDoc = function(req, res) {
 };
 
 exports.deleteDoc = function(req, res) {
-  User.remove({_id: req.params.id},
-    function(err) {
+  Document.findById(req.params.id).remove(function(err, doc) {
     if (err) {
       return res.send(err);
     }

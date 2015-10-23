@@ -1,5 +1,6 @@
 var jwt = require('jsonwebtoken');
 var User = require('../models/user.model');
+var Document = require('../models/document.model');
 var config = require('../../config/config');
 
 exports.createUser = function(req, res) {
@@ -166,7 +167,7 @@ exports.getUserDocs = function(req, res) {
 };
 
 exports.editUser = function(req, res) {
-  User.update({_id: req.params.id},req.body, function() {
+  User.findByIdAndUpdate(req.params.id, req.body, function(err, user) {
     res.send({
       success: true,
       message: 'User Updated!'
@@ -175,8 +176,7 @@ exports.editUser = function(req, res) {
 };
 
 exports.deleteUser = function(req, res) {
-  User.remove({_id: req.params.id},
-    function(err) {
+  User.findById(req.params.id).remove(function(err, user) {
     if (err) {
       return res.send(err);
     }
@@ -188,4 +188,3 @@ exports.deleteUser = function(req, res) {
     }
   });
 };
-
