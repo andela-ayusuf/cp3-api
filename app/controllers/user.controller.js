@@ -3,6 +3,7 @@ var User = require('../models/user.model');
 var Document = require('../models/document.model');
 var config = require('../../config/config');
 
+// this method creates a new document
 exports.createUser = function(req, res) {
   var user = new User();
   user.username = req.body.username;
@@ -46,6 +47,7 @@ exports.createUser = function(req, res) {
   });
 };
 
+// this method logs a user in
 exports.login = function(req, res) {
   User.findOne({
     username: req.body.username})
@@ -82,6 +84,7 @@ exports.login = function(req, res) {
   });
 };
 
+// this method authenticates user
 exports.middleware = function(req, res, next) {
   var token = req.body.token ||
     req.query.token ||
@@ -107,6 +110,7 @@ exports.middleware = function(req, res, next) {
   }
 };
 
+// this method logs a user out
 exports.logout = function(req, res) {
   req.session.destroy(function(err, success) {
     if (err) {
@@ -121,6 +125,7 @@ exports.logout = function(req, res) {
   });
 };
 
+// this method returns all users
 exports.getAllUsers = function(req, res) {
   User.find({}).exec(function(err, users) {
     if (err) {
@@ -138,6 +143,7 @@ exports.getAllUsers = function(req, res) {
   });
 };
 
+// this method returns a single user
 exports.getUser = function(req, res) {
   User.find({_id: req.params.id}, function(err, user) {
     if (err) {
@@ -149,6 +155,7 @@ exports.getUser = function(req, res) {
   });
 };
 
+// this method returns documents belonging to a single user
 exports.getUserDocs = function(req, res) {
   Document.find({ownerId: req.params.id}).exec(function(err, docs) {
     if (err) {
@@ -166,6 +173,7 @@ exports.getUserDocs = function(req, res) {
   });
 };
 
+// this method allows user information to be edited
 exports.editUser = function(req, res) {
   User.findByIdAndUpdate(req.params.id, req.body, function(err, user) {
     res.send({
@@ -175,6 +183,7 @@ exports.editUser = function(req, res) {
   });
 };
 
+// this method deletes single document
 exports.deleteUser = function(req, res) {
   User.findById(req.params.id).remove(function(err, user) {
     if (err) {

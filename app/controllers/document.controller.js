@@ -1,5 +1,6 @@
 var Document = require('../models/document.model');
 
+// this method creates a new document
 exports.createDoc = function(req, res) {
   var doc = new Document();
   doc.ownerId = req.body.ownerId;
@@ -39,6 +40,7 @@ exports.createDoc = function(req, res) {
   });
 };
 
+// this method returns all created documents
 exports.getAllDocs = function(req, res) {
   Document.find({}).exec(function(err, docs) {
     if (err) {
@@ -56,6 +58,7 @@ exports.getAllDocs = function(req, res) {
   });
 };
 
+// this method returns a single document
 exports.getDoc = function(req, res) {
   Document.find({_id: req.params.id}, function(err, doc) {
     if (err) {
@@ -67,6 +70,7 @@ exports.getDoc = function(req, res) {
   });
 };
 
+// this method allows documents to be edited
 exports.editDoc = function(req, res) {
   Document.findByIdAndUpdate(req.params.id, req.body, function(err, doc) {
     res.send({
@@ -76,6 +80,7 @@ exports.editDoc = function(req, res) {
   });
 };
 
+// this method deletes single document
 exports.deleteDoc = function(req, res) {
   Document.findById(req.params.id).remove(function(err, doc) {
     if (err) {

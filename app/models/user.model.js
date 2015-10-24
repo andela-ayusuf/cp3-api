@@ -29,6 +29,7 @@ var userSchema = new Schema({
   }
 });
 
+// hashing the password
 userSchema.pre('save', function(next) {
   var user = this;
   if (!user.isModified('password')) {
